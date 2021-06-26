@@ -1,0 +1,120 @@
+package diskController;
+
+import java.util.PriorityQueue;
+
+import findRoute.path_finding_game_HNY.Node;
+
+public class disk_controller {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		disk_controller disk = new disk_controller();
+
+		// 작업이 요청되는 시점, 작업의 소요시간
+		int[][] jobs = { { 0, 3 }, { 1, 9 }, { 2, 6 } };
+		disk.solution(jobs);
+	}
+	
+	static class ArriveNode {
+		int arriveTime;
+		int jobTime;
+		int num;
+		ArriveNode left;
+		ArriveNode right;
+
+		ArriveNode(int arriveTime, int jobTime, int num) {
+			this.arriveTime = arriveTime;
+			this.jobTime = jobTime;
+			this.num = num;
+			left = null;
+			right = null;
+		}
+
+	}
+	
+	static class JobNode {
+		int arriveTime;
+		int jobTime;
+		int num;
+		JobNode left;
+		JobNode right;
+
+		JobNode(int arriveTime, int jobTime, int num) {
+			this.arriveTime = arriveTime;
+			this.jobTime = jobTime;
+			this.num = num;
+			left = null;
+			right = null;
+		}
+
+	}
+
+	// 먼저 들어온 작업
+	public int fcfs(int[] arriveTime, ) {
+
+	}
+
+	// 작업시간이 짧은것부터
+	public int sjf() {
+
+	}
+
+	public int[] heap(int[] task) {
+		for (int i = 1; i < task.length; i++) {
+			int child = i;
+			while (child > 0) {
+				int parent = (child - 1) / 2;
+				if (task[child] > task[parent]) {
+					int temp = task[parent];
+					task[parent] = task[child];
+					task[child] = temp;
+				}
+				child = parent;
+			}
+		}
+
+		return task;
+	}
+
+	public int[] getArriveTime(int[][] jobs) {
+		int[] result = new int[jobs.length];
+		for (int i = 0; i < jobs.length; i++) {
+			result[i] = jobs[i][0];
+		}
+		
+		return result;
+	}
+
+	public int[] getJobTime(int[][] jobs) {
+		int[] result = new int[jobs[0].length];
+		for (int j = 0; j < jobs[0].length; j++) {
+			result[j] = jobs[j][1];
+		}
+		
+		return result;
+	}
+
+	public int solution(int[][] jobs) {
+		int answer = 0;
+
+		int[] arrive = getArriveTime(jobs);
+		int[] job = getJobTime(jobs);
+		
+		PriorityQueue<ArriveNode> ArrivePriQ = new PriorityQueue<ArriveNode>((n1, n2) -> {
+			return (n2.arriveTime > n1.arriveTime) ? 1 : -1;
+		});
+		
+		PriorityQueue<JobNode> JobPriQ = new PriorityQueue<JobNode>((n1, n2) -> {
+			return (n2.jobTime > n1.jobTime) ? 1 :  -1;
+		});
+		
+		// 들어온 시간 정렬
+		int[] arriveTime = heap(arrive);
+		// 작업 시간 정렬
+		int[] jobTime = heap(job);
+		
+		// 하드디스크가 작업을 수행하고 있지 않을 때에는 먼저 요청이 들어온 작업부터 처리합니다.
+
+		return answer;
+	}
+}

@@ -1,0 +1,143 @@
+package bestAbum3;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
+public class Solution {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Solution sol = new Solution();
+		String[] genres = {"classic", "pop", "classic", "classic", "pop"};
+		int[] plays = {500, 600, 150, 800, 2500};
+		
+		int[] result = sol.solution(genres, plays);
+		for(int i : result){
+			System.out.print(i + ",");
+		}
+	}
+	
+	public int[] solution(String[] genres, int[] plays) {
+        int[] answer = {};
+        // 장르별 재생된 횟수 저장
+        // 장르, 재생된 횟수
+        HashMap<String, Integer> genreCntMap = new HashMap<String, Integer>();
+        // 장르별 고유번호리스트
+//        HashMap<String, ArrayList<Integer>> genreUniqNo = new HashMap<String, ArrayList<Integer>>();
+        // 장르, 고유번호
+        HashMap<String, LinkedList<Integer>> genreUniqNo = new HashMap<String, LinkedList<Integer>>();
+
+        System.out.println("1) 장르별 재생된 횟수 저장 ***********");
+        int cnt = 0;
+        for(int i = 0 ;i <genres.length; i++){
+        	String nextGenre = genres[i];
+        	int nextPlay = plays[i];
+        	if(genreCntMap.containsKey(nextGenre)){
+        		cnt = genreCntMap.get(nextGenre);
+        		genreCntMap.put(nextGenre, (cnt + nextPlay));
+        	}else{
+        		genreCntMap.put(nextGenre, nextPlay);
+        	}
+        }
+        System.out.println("gernreCntMap 키 : " + genreCntMap.keySet().toString());
+        System.out.println("gernreCntMap 값 : " + genreCntMap.entrySet().toString());
+        System.out.println("");
+        
+//        ArrayList<Integer> uniqNoAry;
+        LinkedList<Integer> uniqNoAry;
+        System.out.println("2) 장르별 고유번호 리스트 저장 ***********");
+        for(int i = 0 ;i <genres.length; i++){
+        	String nextGenre = genres[i];
+        	int play = plays[i];
+        	System.out.println("nextGenre: " + nextGenre);
+        	System.out.println("play : " + play);
+        	System.out.println("");
+        	if(genreUniqNo.containsKey(nextGenre)){ // 장르, 고유번호 리스트
+        		System.out.println("장르 있음!");
+        		uniqNoAry = genreUniqNo.get(nextGenre);
+        		
+        		for(int j = 0 ; j<uniqNoAry.size(); j++){
+        			int uniqNo = uniqNoAry.get(j); // 고유번호
+        			System.out.println("uniqNo : " + uniqNo);
+        			System.out.println("plays[uniqNo] : " + plays[uniqNo]);
+        			if(plays[uniqNo] > play ){
+        				System.out.println("컨티뉴...");
+        				continue;
+        			}else if(plays[uniqNo] < play  ){ // 재생횟수가 많은 순으로 저장
+        				uniqNoAry.add(j, i);
+        				System.out.println("대체");
+        				break;
+        			}else { // 재생횟수가 같으면 고유번호가 낮은 노래를 먼저 수록 -> 재생횟수가 많은 순으로 저장
+        				System.out.println("재생횟수 같음");
+        				if(uniqNo > i){ 
+        					System.out.println("재생횟수 같을떄 대체");
+        					uniqNoAry.add(j, i);
+        				}
+        			}
+        		}
+        		
+        		genreUniqNo.put(nextGenre, uniqNoAry);
+        	}else{
+        		System.out.println("장르 없음!");
+//        		uniqNoAry = new ArrayList<Integer>();
+        		uniqNoAry = new LinkedList<Integer>();
+        		uniqNoAry.add(i);
+        		genreUniqNo.put(nextGenre, uniqNoAry);
+        	}
+        }
+        System.out.println("genreUniqNo 키 : " + genreUniqNo.keySet().toString());
+        System.out.println("genreUniqNo 값: " + genreUniqNo.entrySet().toString());
+        System.out.println("");
+        
+//        Set<Entry<String,Integer>> entry = genreCntMap.entrySet();
+        List<Entry<String, Integer>> list_entries = new ArrayList<Entry<String, Integer>>(genreCntMap.entrySet());
+//        list_entries = entry.
+        Collections.sort(list_entries, new Comparator<Entry<String, Integer>>() {
+			@Override
+			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+				// TODO Auto-generated method stub
+				return o2.getValue().compareTo(o1.getValue()); // 내림차순 정렬
+			}
+		});
+        
+        
+        ArrayList<Integer> tempAry = new ArrayList<Integer>();
+        for(Entry<String, Integer> next : list_entries){
+        	LinkedList<Integer> nextUniqAry;
+        	
+        	System.out.println("다음 장르 : " + next.getKey());
+        	System.out.println("");
+        	if(genreUniqNo.containsKey(next.getKey())){
+        		nextUniqAry = genreUniqNo.get(next.getKey());
+        		int tempCnt = 0; // 최대 2개까지만 수록
+        		System.out.println("{고유번호 리스트 }");
+        		for(int uniqNo : nextUniqAry){
+        			if(tempCnt == 2){
+        				break;
+        			}
+        			System.out.print( uniqNo + ",");
+        			tempAry.add(uniqNo);
+//        			answer[index] = uniqNo;
+        			tempCnt++;
+        		}
+        		System.out.println("");
+        	}
+        	System.out.println("");
+        }
+        System.out.println("");
+        answer = new int[tempAry.size()];
+        int index = 0;
+        for(int nextInt : tempAry){
+        	answer[index] = nextInt;
+			index++;
+        }
+        return answer;
+    }
+
+}
