@@ -1,0 +1,29 @@
+입력 값 : {{0,1,1},{0,2,2},{1,2,5},{1,3,1},{2,3,8}}  // 노드1, 노드2, 연결비용
+
+[오름차순 정렬 시 알면 좋은 내용 및 코드 해석]
+"Sorts the specified array of objects according to the order induced bythe specified comparator. 
+All elements in the array must be mutually comparable by the specified comparator (that is, c.compare(e1, e2)
+must not throw a ClassCastExceptionfor any elements e1 and e2 in the array). "  
+
+Arrays.sort 는 comparator를 내장하기 때문에 compare(o1, o2)를 사용해서 임의적으로 정렬할 수 있는거같다.
+ * 코드 내용 : Arrays.sort(costs, (int[] o1, int o2[]) -> (o1[2] - o2[2]) ); // {0,1,1},{0,2,2}에서 o1[2]는 1  o2[2]는 2
+
+[크루즈칼의 union find 개념]
+아.. 구현하는게 좀 짜증났긴 했는데 
+일단 개념은 아래 링크
+https://maetdori.tistory.com/m/entry/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-Kruskal-Algorithm-Union-Find-%ED%81%AC%EB%A3%A8%EC%8A%A4%EC%B9%BC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%9C%A0%EB%8B%88%EC%98%A8-%ED%8C%8C%EC%9D%B8%EB%93%9C
+
+장황하지만 결론적으로는
+
+두개의 그래프가 따로 있을 수 있는뎅 
+1. 0 1 2 3 4 를 각자의 값으로 초기화
+2. 오름차순 정렬
+3. 0하고 1이 1의 비용으로 연결되어있으면 -> 같은 그래프라는 소리니까 일단 부모( 0, 1)를 각각 찾고 
+4. 부모가 다르니까 사이클이 연결 안되어있고 그러므로 비용을 total에 추가
+5. 연결되었으니까 너네 부모는 같다! 1에 0의 부모를 넣어줌 ( 이 문제의 특성상 그냥 넣어준거같은데 사실상 부모값 비교해서 작은 값으로 넣어줘야하지 않나..)
+
+[Comparable 의 compareTo와 Comparator의 compare 정리] 
+별거없지만
+* Comparable 의 compareTo 는   자기자신.compareTo( 매개변수 객체) 로 자기자신과 매개변수로 들어온 객체의 값을 비교 (기준은 내가 정의하기 나름)
+
+* Comparator의 compare는 compare( 매개변수 객체 1,  매개변수 객체2)로 매개변수 객체의 값을 비교 (이것도 내맘대로)
